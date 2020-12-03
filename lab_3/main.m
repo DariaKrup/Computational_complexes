@@ -43,7 +43,7 @@ sup_c = [14.4; 15];
 b1 = inf(A');
 Cminim2 = condd(A',inf_A', sup_A', b1, -1);
 c = 0.5 * (abs(sup_c)-abs(inf_c));
-ive2 = sqrt(2) * maxTol2 * norm(argmaxTol2) / norm(c) * Cminim2;
+ive2 = sqrt(3) * maxTol2 * norm(argmaxTol2) / norm(c) * Cminim2;
 disp('For the second task:');
 disp('Ive_2D = ' + ive2);
 disp('Max tol = ' + maxTol2);
