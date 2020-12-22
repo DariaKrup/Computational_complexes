@@ -1,9 +1,10 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 A = np.array([[[2, 4], [-2, 1]],
               [[-2, 1], [2, 4]]])
-d_low = np.array([-1.5, -2])
-d_up = np.array([3, 2])
+d_low = np.array([-2, -2])
+d_up = np.array([2, 2])
 
 
 def min_from_4(a, b, c, d):
@@ -52,7 +53,7 @@ def dx_pos(x):
     if x > 0:
         return 1
     elif x == 0:
-        return 0.1
+        return 0.9
     else:
         return 0
 
@@ -61,7 +62,7 @@ def dx_neg(x):
     if x < 0:
         return -1
     elif x == 0:
-        return -0.1
+        return -0.9
     else:
         return 0
 
@@ -147,10 +148,23 @@ for eps in eps_s:
     print('Accuracy: ' + str(eps))
     (x_inf, x_sup), iterations = sub_grad_2(A, d_low, d_up, eps)
     for i in range(len(x_inf)):
-        print('[' + str(np.around(x_inf[i], decimals=4)) + ', ' + str(np.around(x_sup[i], decimals=4)) + ']')
+        print('[' + str(x_inf[i]) + ', ' + str(x_sup[i]) + ']')
     print('Quantity of iterations: ' + str(iterations))
     print()
 
+"""eps_0 = 0.01
+iters = []
+x = []
+for i in range(8):
+    x.append(eps_0)
+    (x_inf, x_sup), iterations = sub_grad_2(A, d_low, d_up, eps_0)
+    iters.append(iterations)
+    eps_0 /= 10
+plt.plot(x, iters)
+plt.xlabel('Accuracy')
+plt.ylabel('Quantity of iterations')
+plt.savefig('iterations.png', format='png')
+plt.show()"""
 
 
 # Second part
@@ -185,6 +199,11 @@ for i in range(len(counters)):
         deleting.append(i)
 matrix = np.delete(matrix, deleting, axis=0)
 print('Determinant of cut matrix: ' + str(np.linalg.det(matrix)))
+np.savetxt('matrix.txt', matrix)
+
+
+# Second way
+#print(matrix)
 
 
 n = matrix.shape[0]
@@ -196,16 +215,15 @@ for i in range(len(matrix)):
     array = []
     for j in range(n):
         rad_m = np.random.random(1)
-        array.append([matrix[i][j] - rad_m, matrix[i][j] + rad_m])
+        array.append(np.append(matrix[i][j] - rad_m, matrix[i][j] + rad_m))
     matrix_m.append(array)
 b_low = b - rad
 b_up = b + rad
 
 rad_m = 0.5
-print(matrix)
+#print(matrix)
 
 eps = 1e-5
-print(matrix_m)
 (x_inf, x_sup), iterations = sub_grad_2(matrix_m, b_low, b_up, eps)
 for i in range(len(x_inf)):
     print('[' + str(np.around(x_inf[i], decimals=4)) + ', ' + str(np.around(x_sup[i], decimals=4)) + ']')
