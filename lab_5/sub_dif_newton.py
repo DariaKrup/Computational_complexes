@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats.stats import pearsonr
 
 A = np.array([[[2, 4], [-2, 1]],
               [[-2, 1], [2, 4]]])
@@ -138,11 +139,13 @@ def sub_grad_2(A, b_inf, b_sup, eps):
         iter_count += 1
         sub_grad = get_sub_grad(A, x)
         func_g = get_g(x, A, sti_b)
+        #print(np.linalg.det(sub_grad))
         x = np.subtract(x, np.linalg.inv(sub_grad).dot(func_g))
+        print(x)
         prev_g = func_g
     return sti_reversed(x), iter_count
 
-
+# First task
 eps_s = [1e-3, 1e-5, 1e-10]
 for eps in eps_s:
     print('Accuracy: ' + str(eps))
@@ -152,10 +155,11 @@ for eps in eps_s:
     print('Quantity of iterations: ' + str(iterations))
     print()
 
-"""eps_0 = 0.01
+
+eps_0 = 0.01
 iters = []
 x = []
-for i in range(8):
+for i in range(18):
     x.append(eps_0)
     (x_inf, x_sup), iterations = sub_grad_2(A, d_low, d_up, eps_0)
     iters.append(iterations)
@@ -164,68 +168,106 @@ plt.plot(x, iters)
 plt.xlabel('Accuracy')
 plt.ylabel('Quantity of iterations')
 plt.savefig('iterations.png', format='png')
-plt.show()"""
+plt.show()
+
+
+def plot_result(x, x_sup, x_inf, A, b_low, b_up, title):
+    plt.plot(np.dot(A, x_inf), label='A * x_inf', color='darkblue')
+    plt.plot(np.dot(A, x_sup), label='A * x_sup', color='deepskyblue')
+    plt.plot(np.dot(A, x), label='b', color='aquamarine')
+    plt.legend()
+    plt.title('Results')
+    plt.grid()
+    plt.savefig(title + '.png', format='png')
+    plt.show()
 
 
 # Second part
-matrix = np.loadtxt('matrix_n_phi_1.txt')
-matrix = np.array(matrix[:128, :])
-# Delete null columns
-null_columns = []
-for i in range(matrix.shape[1]):
-    count = 0
-    for j in range(matrix.shape[0]):
-        if matrix[j][i] == 0:
-            count += 1
-    if count == matrix.shape[0]:
-        null_columns.append(i)
-matrix = np.delete(matrix, null_columns, axis=1)
-print(matrix.shape[0], matrix.shape[1])
+files = ['matrix_n_phi_1.txt', 'matrix_n_phi_6.txt']
+title = ['matrix_n_phi_1', 'matrix_n_phi_6']
+i = 0
+for file in files:
+    matrix = np.loadtxt(file)
+    matrix = np.array(matrix[:128, :])
+    # Delete null columns
+    null_columns = []
+    for i in range(matrix.shape[1]):
+        count = 0
+        for j in range(matrix.shape[0]):
+            if matrix[j][i] == 0:
+                count += 1
+        if count == matrix.shape[0]:
+            null_columns.append(i)
+    matrix = np.delete(matrix, null_columns, axis=1)
+    print(matrix.shape[0], matrix.shape[1])
 
-# Leave most filled lines
-counters = np.zeros(matrix.shape[0])
-for i in range(matrix.shape[0]):
-    for j in range(matrix.shape[1]):
-        if matrix[i][j] != 0:
-            counters[i] += 1
+    # Leave most filled lines
+    counters = np.zeros(matrix.shape[0])
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            if matrix[i][j] != 0:
+                counters[i] += 1
 
-deleting = []
-not_10 = False
-for i in range(len(counters)):
-    if counters[i] < 11:
-        if counters[i] == 10 and not not_10:
-            not_10 = True
-            continue
-        deleting.append(i)
-matrix = np.delete(matrix, deleting, axis=0)
-print('Determinant of cut matrix: ' + str(np.linalg.det(matrix)))
-np.savetxt('matrix.txt', matrix)
+    deleting = []
+    not_10 = False
+    for i in range(len(counters)):
+        if counters[i] < 11:
+            #if counters[i] == 10 and not not_10:
+            #    not_10 = True
+            #    continue
+            deleting.append(i)
+    #for j in range(len(deleting)):
+     #   deleting[j] += 1
+    rand = np.random.randint(0, len(deleting) - 1)
+    print(rand)
+    deleting.pop(rand)
+    matrix = np.delete(matrix, deleting, axis=0)
+    first = np.random.randint(0, matrix.shape[1])
+    second = np.random.randint(0, matrix.shape[1])
+    #matrix = np.rot90(matrix)
+    for i in range(matrix.shape[1]):
+       matrix[i][first], matrix[i][second] = matrix[i][second], matrix[i][first]
+    print('Determinant of cut matrix: ' + str(np.linalg.det(matrix)))
+    #np.savetxt('matrix.txt', matrix)
 
 
-# Second way
-#print(matrix)
+    """cor_lim = 0.6
+    deleting = []
+    for i in range(matrix.shape[0] - 1):
+        if pearsonr(matrix[i][:], matrix[i + 1][:])[0] > cor_lim:
+            deleting.append(i)
+    deleting.pop(len(deleting) // 4)
+    matrix = np.delete(matrix, deleting, axis=0)
+    print(matrix.shape[0], matrix.shape[1])
+    print(np.linalg.matrix_rank(matrix))
+    np.random.shuffle(matrix)
+    print('Determinant of cut matrix: ' + str(np.linalg.det(matrix)))
+    np.savetxt('matrix.txt', matrix)"""
 
 
-n = matrix.shape[0]
-x = np.random.random(n)
-b = matrix.dot(x)
-rad = np.random.random(n)
-matrix_m = []
-for i in range(len(matrix)):
-    array = []
-    for j in range(n):
-        rad_m = np.random.random(1)
-        array.append(np.append(matrix[i][j] - rad_m, matrix[i][j] + rad_m))
-    matrix_m.append(array)
-b_low = b - rad
-b_up = b + rad
+    n = matrix.shape[0]
+    x = np.random.uniform(low=0.5, high=2, size=n)
+    print('x: ', x)
+    b = matrix.dot(x)
+    rad = np.random.uniform(low=1.5, high=3, size=n)
+    print('rad:', rad)
+    matrix_m = []
+    for i in range(len(matrix)):
+        array = []
+        for j in range(n):
+            rad_m = np.random.random(1)
+            array.append(np.append(matrix[i][j] - rad_m, matrix[i][j] + rad_m))
+        matrix_m.append(array)
+    b_low = b - rad
+    b_up = b + rad
 
-rad_m = 0.5
-#print(matrix)
 
-eps = 1e-5
-(x_inf, x_sup), iterations = sub_grad_2(matrix_m, b_low, b_up, eps)
-for i in range(len(x_inf)):
-    print('[' + str(np.around(x_inf[i], decimals=4)) + ', ' + str(np.around(x_sup[i], decimals=4)) + ']')
-print('Quantity of iterations: ' + str(iterations))
-print()
+    eps = 1e-5
+    (x_inf, x_sup), iterations = sub_grad_2(matrix_m, b_low, b_up, eps)
+    for i in range(len(x_inf)):
+        print('[' + str(x_inf[i]) + ', ' + str(x_sup[i]) + ']')
+    print('Quantity of iterations: ' + str(iterations))
+    print()
+
+    plot_result(x, x_sup, x_inf, A, b_low, b_up, title[i])
+    i += 1
