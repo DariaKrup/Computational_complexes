@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats.stats import pearsonr
 
 A = np.array([[[2, 4], [-2, 1]],
               [[-2, 1], [2, 4]]])
@@ -175,10 +174,26 @@ def plot_result(x, x_sup, x_inf, A, b_low, b_up, title):
     plt.plot(np.dot(A, x_inf), label='A * x_inf', color='darkblue')
     plt.plot(np.dot(A, x_sup), label='A * x_sup', color='deepskyblue')
     plt.plot(np.dot(A, x), label='b', color='aquamarine')
+    plt.plot(b_low, label='b_inf', ls='--', color='lawngreen')
+    plt.plot(b_up, label='b_sup', ls='--', color='yellow')
     plt.legend()
     plt.title('Results')
     plt.grid()
     plt.savefig(title + '.png', format='png')
+    plt.show()
+
+
+def plot_x(x, x_inf, x_sup):
+    plt.figure(figsize=(18, 8))
+    plt.plot(x, label='s_new', color='darkred')
+    plt.plot(x_inf, label='x_inf', color='orchid')
+    plt.plot(x_sup, label='x_sup', color='indigo')
+    plt.xlabel('index')
+    plt.ylabel('value')
+    plt.title('Сравнение полученного решения с исходным')
+    plt.legend()
+    plt.grid()
+    plt.savefig('w_s_new' + '.png', format='png')
     plt.show()
 
 
@@ -221,6 +236,7 @@ for file in files:
     rand = np.random.randint(0, len(deleting) - 1)
     print(rand)
     deleting.pop(rand)
+    row = deleting[0]
     matrix = np.delete(matrix, deleting, axis=0)
     first = np.random.randint(0, matrix.shape[1])
     second = np.random.randint(0, matrix.shape[1])
@@ -271,3 +287,16 @@ for file in files:
 
     plot_result(x, x_sup, x_inf, A, b_low, b_up, title[i])
     i += 1
+
+size = 18
+
+b = np.array(np.loadtxt('bnew.txt'))
+b = b[row: row + size]
+rads = np.random.uniform(low=0.5, high=2, size=size)
+b_inf = b - rads  # make b interval
+b_sup = b + rads
+x = np.array(np.loadtxt('snew.txt'))[:size]
+print(x.shape[0])
+
+x_inf, x_sup = sub_grad_2(A, b_inf, b_sup, 1e-5)
+plot_x(x, x_sup, x_inf)
