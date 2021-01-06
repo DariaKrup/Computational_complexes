@@ -26,12 +26,20 @@ for j=1:size(rads, 2)
         test_sol216 = zeros(216,1);
         test_sol216(ind_rzphi)=1;
         bsol216=L256216*test_sol216;
+        
+        % Save right parts
         matr_name = strcat({'b_'}, orient, {'_rad_'}, num2str(rad_rot), {'.txt'}); 
         matr_name = char(matr_name);
         save(matr_name, 'bsol216', '-ascii');
+        
         bsol216sq=reshape(bsol216,16,16);
         
-        % Plot
+        % Save model solution
+        sol_name = strcat({'x_'}, orient, {'_rad_'}, num2str(rad_rot), {'.txt'}); 
+        sol_name = char(sol_name);
+        save(sol_name, 'test_sol216', '-ascii');
+        
+        % Plot projection of detector matrix
         figure
         pcolor(bsol216sq')
         colorbar
@@ -39,15 +47,29 @@ for j=1:size(rads, 2)
         ylabel('\it row')
         title_str = strcat({'Detector Matrix. CIRCLE '}, orient, {' nr ='}, num2str(nr_s(i)), {' nz ='}, num2str(nz_s(i)), {' rad ='}, num2str(rad_rot), {' nphi ='}, num2str(n_phi));
         title(title_str)
-        figure_name = strcat(title_str,'.png');
         fpath = 'C:\Users\Daria\Documents\MATLAB';
         saveas(gcf, fullfile(fpath, char(strcat(title_str, '.png'))), 'png');
-    
+        
+        
+        % Plot dependency number of variable - variable
+        nums = 1:1:216;
+        figure 
+        grid on
+        hold on
+        xlim([1 216])
+        plot(nums, test_sol216, 'b')
+        xlabel('\it number of variable')
+        ylabel('\it variable')
+        title_str = strcat({'Model solution '}, orient, {' nr ='}, num2str(nr_s(i)), {' nz ='}, num2str(nz_s(i)), {' rad ='}, num2str(rad_rot), {' nphi ='}, num2str(n_phi));
+        title(title_str)
+        fpath = 'C:\Users\Daria\Documents\MATLAB';
+        saveas(gcf, fullfile(fpath, char(strcat(title_str, '.png'))), 'png');
     end
 
-    
-    test_sol216 = zeros(216,1);
+    % Plot summary projection for radius
+    solution = zeros(16, 16);
     for i=1:size(orients, 2)
+        test_sol216 = zeros(216,1);
         orient = orients(i);
         ind_rzphi = ind_rzph(i);
         test_sol216(ind_rzphi)=1;
@@ -56,13 +78,22 @@ for j=1:size(rads, 2)
         matr_name = char(matr_name);
         save(matr_name, 'bsol216', '-ascii');
         bsol216sq=reshape(bsol216,16,16);
+        solution = solution +  bsol216sq;
     end
+    
+    % Save summary right part
     matr_name = strcat({'b'}, {'_rad_'}, num2str(rad_rot), {'.txt'}); 
     matr_name = char(matr_name);
     save(matr_name, 'bsol216', '-ascii');
+    
+    % Save summary solution
+    sol_name = strcat({'x'},{'_rad_'}, num2str(rad_rot), {'.txt'}); 
+    sol_name = char(sol_name);
+    save(sol_name, 'test_sol216', '-ascii');
+        
         
     figure
-    pcolor(bsol216sq')
+    pcolor(solution')
     colorbar
     xlabel('\it col')
     ylabel('\it row')
