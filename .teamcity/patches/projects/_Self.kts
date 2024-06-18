@@ -6,6 +6,7 @@ import jetbrains.buildServer.configs.kotlin.projectFeatures.AwsConnection
 import jetbrains.buildServer.configs.kotlin.projectFeatures.DockerRegistryConnection
 import jetbrains.buildServer.configs.kotlin.projectFeatures.awsConnection
 import jetbrains.buildServer.configs.kotlin.projectFeatures.dockerRegistry
+import jetbrains.buildServer.configs.kotlin.projectFeatures.hashiCorpVaultConnection
 import jetbrains.buildServer.configs.kotlin.ui.*
 
 /*
@@ -41,6 +42,18 @@ changeProject(DslContext.projectId) {
             }
         }
         feature2.apply {
+        }
+        add {
+            hashiCorpVaultConnection {
+                id = "PROJECT_EXT_34"
+                name = "HashiCorp Vault"
+                vaultId = "VaultLocal"
+                url = "https://localhost:8200"
+                authMethod = appRole {
+                    roleId = "e0d9ef3e-a837-c70c-ea96-46e9870e6567"
+                    secretId = "credentialsJSON:ceead93f-1e96-4c16-83a0-2aec7352d3fe"
+                }
+            }
         }
     }
 }
