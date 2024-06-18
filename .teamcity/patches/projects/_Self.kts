@@ -24,7 +24,7 @@ changeProject(DslContext.projectId) {
             }
         }
         feature1.apply {
-            password = "credentialsJSON:a9c6667d-c080-49ff-a393-b640eca685ef"
+            password = "credentialsJSON:c0cceabb-3e54-4eb4-8f1d-b36db6e167ef"
         }
         val feature2 = find<AwsConnection> {
             awsConnection {
