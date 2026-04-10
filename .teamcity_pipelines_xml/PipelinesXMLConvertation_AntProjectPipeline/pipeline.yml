@@ -1,4 +1,7 @@
 jobs:
   Job1:
-    name: Job 1
-    steps: []
+    name: 'Job: Ant'
+    steps:
+      - type: script
+        script-content: echo "Ant is not supported"
+        name: Ant support
