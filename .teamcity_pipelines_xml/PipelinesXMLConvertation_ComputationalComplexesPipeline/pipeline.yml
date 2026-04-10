@@ -5,5 +5,7 @@ jobs:
       - type: script
         name: Check lab5 file
         script-content: echo ./lab_5/snew.txt
+    parameters:
+      env.JOB: fifth
 parameters:
   labNumber: '5'
