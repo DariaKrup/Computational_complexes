@@ -1,0 +1,9 @@
+jobs:
+  Job1:
+    name: Job check
+    steps:
+      - type: script
+        name: Check lab5 file
+        script-content: echo ./lab_5/snew.txt
+parameters:
+  labNumber: '5'
