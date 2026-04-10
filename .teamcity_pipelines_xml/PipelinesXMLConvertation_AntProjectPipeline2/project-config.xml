@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" parent-id="PipelinesXMLConvertation" uuid="e5fc6104-961c-40e6-890b-56d9b9a587dc" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
+  <name>AntProject: pipeline (2)</name>
+  <parameters>
+    <param name="teamcity.pipelines.externalMainVcsRootId" value="PipelinesXMLConvertation_HttpsGithubComDariaKrupAntProjectRefsHeadsMaster1" spec="text display='hidden'" />
+    <param name="teamcity.projectCredentials.storageType" value="credentialsJSON" spec="text display='hidden'" />
+  </parameters>
+</project>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="256c17d3-9b00-4e8d-aedd-adf3c121adcf" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2025.3/project-config.xsd">
+  <name>Pipeline Head</name>
+  <description />
+  <settings>
+    <options>
+      <option name="artifactRules" value="**" />
+    </options>
+    <disabled-settings>
+      <setting-ref ref="BUILD_EXT_674" />
+    </disabled-settings>
+    <parameters>
+      <param name="teamcity.optimization.keepOptimizationLog" value="true" spec="text display='hidden'" />
+    </parameters>
+    <vcs-settings>
+      <vcs-entry-ref root-id="PipelinesXMLConvertation_HttpsGithubComDariaKrupAntProjectRefsHeadsMaster1" />
+    </vcs-settings>
+    <build-triggers>
+      <build-trigger id="TRIGGER_358" type="vcsTrigger">
+        <parameters>
+          <param name="branchFilter"><![CDATA[+:*
++pr:*]]></param>
+          <param name="enableQueueOptimization" value="true" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_674" type="commit-status-publisher">
+        <parameters>
+          <param name="github_authentication_type" value="vcsRoot" />
+          <param name="github_host" value="https://api.github.com" />
+          <param name="publisherId" value="githubStatusPublisher" />
+          <param name="vcsRootId" value="PipelinesXMLConvertation_HttpsGithubComDariaKrupAntProjectRefsHeadsMaster1" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_675" type="pullRequests">
+        <parameters>
+          <param name="authenticationType" value="vcsRoot" />
+          <param name="filterAuthorRole" value="MEMBER" />
+          <param name="providerType" value="github" />
+          <param name="vcsRootId" value="PipelinesXMLConvertation_HttpsGithubComDariaKrupAntProjectRefsHeadsMaster1" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup>
+      <options>
+        <option name="preventDependenciesArtifactsFromCleanup" value="true" />
+      </options>
+    </cleanup>
+  </settings>
+</build-type>
+
