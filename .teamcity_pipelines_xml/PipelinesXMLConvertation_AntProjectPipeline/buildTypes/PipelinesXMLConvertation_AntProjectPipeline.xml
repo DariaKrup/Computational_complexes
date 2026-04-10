@@ -8,6 +8,7 @@
     </options>
     <disabled-settings>
       <setting-ref ref="BUILD_EXT_578" />
+      <setting-ref ref="BUILD_EXT_579" />
     </disabled-settings>
     <parameters>
       <param name="teamcity.optimization.keepOptimizationLog" value="true" spec="text display='hidden'" />
@@ -18,8 +19,7 @@
     <build-triggers>
       <build-trigger id="TRIGGER_355" type="vcsTrigger">
         <parameters>
-          <param name="branchFilter"><![CDATA[+:*
-+pr:*]]></param>
+          <param name="branchFilter" value="+:*" />
           <param name="enableQueueOptimization" value="true" />
         </parameters>
       </build-trigger>
