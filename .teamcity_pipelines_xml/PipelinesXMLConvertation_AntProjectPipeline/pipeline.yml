@@ -5,3 +5,5 @@ jobs:
       - type: script
         script-content: echo "Ant is not supported"
         name: Ant support
+parameters:
+  level: pipeline
